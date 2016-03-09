@@ -1,0 +1,137 @@
+[
+{
+  "model": "category_tree.category",
+  "pk": 1,
+  "fields": {
+    "category_name": "Books",
+    "description": "",
+    "parent_category": null
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 2,
+  "fields": {
+    "category_name": "Arts & Photography",
+    "description": "",
+    "parent_category": 1
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 3,
+  "fields": {
+    "category_name": "Architecture",
+    "description": "",
+    "parent_category": 2
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 4,
+  "fields": {
+    "category_name": "CookBooks, Food & Wine",
+    "description": "",
+    "parent_category": 1
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 5,
+  "fields": {
+    "category_name": "Asian Cooking",
+    "description": "",
+    "parent_category": 4
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 6,
+  "fields": {
+    "category_name": "Baking",
+    "description": "",
+    "parent_category": 4
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 7,
+  "fields": {
+    "category_name": "Computer & Technology",
+    "description": "",
+    "parent_category": 1
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 8,
+  "fields": {
+    "category_name": "Database & BigData",
+    "description": "",
+    "parent_category": 7
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 9,
+  "fields": {
+    "category_name": "Data Mining",
+    "description": "",
+    "parent_category": 8
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 10,
+  "fields": {
+    "category_name": "Oracle",
+    "description": "",
+    "parent_category": 8
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 11,
+  "fields": {
+    "category_name": "Programming",
+    "description": "",
+    "parent_category": 7
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 12,
+  "fields": {
+    "category_name": "Algorithms",
+    "description": "",
+    "parent_category": 11
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 13,
+  "fields": {
+    "category_name": "Data Structures",
+    "description": "",
+    "parent_category": 12
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 14,
+  "fields": {
+    "category_name": "Genetic",
+    "description": "",
+    "parent_category": 12
+  }
+},
+{
+  "model": "category_tree.category",
+  "pk": 15,
+  "fields": {
+    "category_name": "Mobile Apps",
+    "description": "",
+    "parent_category": 11
+  }
+}
+]
