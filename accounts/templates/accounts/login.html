@@ -1,0 +1,23 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <p>Login Form</p>
+
+    {% for login_error_message in login_error_messages %}
+      <p>{{login_error_message}}</p>
+    {% endfor %}
+
+    <form action="{% url 'accounts:login' %}" method="post">
+        {% csrf_token %}
+        {{ loginForm }}
+        <input type="submit" name="login" value="Login">
+    </form>
+<br/>
+    <a href="{% url 'accounts:trouble_login' %}"><p>Need help?</p></a>
+<br/>
+
+<a href="{% url 'accounts:register' %}"><p>Create new account? Click here</p> </a>
+
+{% endblock %}

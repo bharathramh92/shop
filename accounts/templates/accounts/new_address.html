@@ -1,0 +1,12 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}New Address{% endblock %}
+
+{% block body %}
+
+<form action="{% url 'accounts:new_address' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" name="new_address" value="Add New Address">
+</form>
+{% endblock %}

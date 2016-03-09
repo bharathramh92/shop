@@ -1,0 +1,10 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}New User Registered{% endblock %}
+
+{% block body %}
+
+<p>We have sent an email. Please verify your email to complete registration process.</p>
+<p>Click <a href="{% url 'accounts:login'%}">here</a> to login.</p>
+
+{% endblock %}

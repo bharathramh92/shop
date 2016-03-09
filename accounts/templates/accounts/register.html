@@ -1,0 +1,21 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+<p>Register Form</p>
+
+{% for register_error_message in register_error_messages %}
+<p>register_error_message</p>
+{% endfor %}
+
+<form action="{% url 'accounts:register' %}" method="post">
+    {% csrf_token %}
+    {{ registerForm }}
+    <input type="submit" name="register" value="Register">
+</form>
+
+<a href="{% url 'accounts:login' %}"><p>Go back to login Page.</p> </a>
+
+{% endblock %}

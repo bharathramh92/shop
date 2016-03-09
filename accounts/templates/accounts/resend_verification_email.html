@@ -1,0 +1,18 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Resend verification email{% endblock %}
+
+{% block body %}
+
+{% if success %}
+<p>Please check your email</p>
+{% elif already_verified %}
+<p>Your email was already verified. To reset the password, Click <a href="{% url 'accounts:forget_password'%}">here</a>.</p>
+{% else %}
+<form action="{% url 'accounts:resend_verification_email' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" name="resend" value="Re-Send Email">
+    </form>
+{% endif %}
+{% endblock %}

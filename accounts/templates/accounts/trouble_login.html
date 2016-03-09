@@ -1,0 +1,10 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Trouble login in?{% endblock %}
+
+{% block body %}
+
+<p>Forgot password? Click <a href="{% url 'accounts:forget_password'%}">here</a>.</p>
+<p>Email not verified? Click <a href="{% url 'accounts:resend_verification_email'%}">here</a>.</p>
+
+{% endblock %}

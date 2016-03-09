@@ -1,0 +1,10 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Email not verified{% endblock %}
+
+{% block body %}
+   <p>Your email has not yet verified. Please check your email which you have received at the time of registration to verify.</p>
+    <p>In case you didn't receive a verification email or the link got expired,
+        click <a href="{% url 'accounts:resend_verification_email' %}">here</a> to receive a new verification email.</p>
+
+{% endblock %}
