@@ -1,0 +1,24 @@
+{
+    "Books": {
+        "Arts & Photography": {
+            "Architecture": {}
+        }
+        , "CookBooks, Food & Wine": {
+            "Asian Cooking": {}
+            , "Baking": {}
+        }
+        , "Computer & Technology": {
+            "Database & BigData": {
+                "Data Mining": {}
+                , "Oracle": {}
+            }
+            , "Programming": {
+                "Algorithms": {
+                    "Data Structures": {}
+                    , "Genetic": {}
+                }
+                , "Mobile Apps": {}
+            }
+        }
+    }
+}
