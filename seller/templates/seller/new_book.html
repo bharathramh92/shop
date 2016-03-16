@@ -1,0 +1,24 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Add Book{% endblock %}
+
+{% block body %}
+
+<form action="{% url 'seller:new_book' isbn %}" method="post">
+        {% csrf_token %}
+        {{ itemForm.as_p }}
+        {{ bookForm.as_p }}
+        {{ authorForm.as_p}}
+        {{ publisherForm.as_p }}
+    <p>Click  <a href="{% url 'seller:new_author' %}" target="_blank">here</a> to add a new Author</p>
+    <p>Click  <a href="{% url 'seller:new_publisher' %}" target="_blank">here</a> to add a new Publisher</p>
+        <input type="submit" value="Add">
+    </form>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+{{authorForm.media}}
+{{publisherForm.media}}
+{% endblock %}

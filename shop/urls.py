@@ -15,11 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+
 import accounts.urls
 import category_tree.urls
+import listing.urls
+import seller.urls
 
 urlpatterns = [
+    url(r'^', include(listing.urls, namespace='listing')),
     url(r'^admin/', admin.site.urls),
     url(r'accounts/', include(accounts.urls, namespace='accounts')),
     url(r'category_tree/', include(category_tree.urls, namespace='category_tree')),
+    url(r'^seller/', include(seller.urls, namespace="seller")),
 ]

@@ -1,0 +1,14 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Inventory Addition{% endblock %}
+
+{% block body %}
+<h2>Inventory Form</h2>
+<form action="{% url 'seller:new_inventory' %}{{get_params}}" method="post">
+        {% csrf_token %}
+    {{inventoryForm.as_p}}
+    <a href="{% url 'accounts:new_address' %}" target="_blank">Add new address</a>
+        <input type="submit" value="Add">
+    </form>
+
+{% endblock %}

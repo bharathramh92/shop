@@ -1,0 +1,13 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Add Publisher{% endblock %}
+
+{% block body %}
+
+<form action="{% url 'seller:new_publisher' %}" method="post">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" value="Add Publisher">
+    </form>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Add Book{% endblock %}
+
+{% block body %}
+
+<form action="{% url 'seller:new_book_check' %}" method="post">
+        {% csrf_token %}
+        {{ isbnCheckForm }}
+        <input type="submit" value="Add">
+    </form>
+
+{% endblock %}

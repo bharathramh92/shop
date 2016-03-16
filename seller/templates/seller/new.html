@@ -1,0 +1,13 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Add New Item{% endblock %}
+
+{% block body %}
+
+<form action="{% url 'seller:new' %}" method="post">
+        {% csrf_token %}
+        {{ storeForm }}
+        <input type="submit" value="Add">
+    </form>
+
+{% endblock %}

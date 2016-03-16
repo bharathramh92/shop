@@ -1,0 +1,8 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Inventory Added{% endblock %}
+
+{% block body %}
+<p>New item added to your inventory.</p>
+<a href="{% url 'seller:dashboard'%}">Go to seller dashboard</a>
+{% endblock %}

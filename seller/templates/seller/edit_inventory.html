@@ -1,0 +1,16 @@
+{% extends "seller/base.html" %}
+
+{% block title %}Edit Inventory{% endblock %}
+
+{% block body %}
+{% if message %}
+<p>{{message}}</p>
+{% endif %}
+<form action="{% url 'seller:edit_inventory' pk%}" method="post">
+    {% csrf_token %}
+    {{inventoryForm.as_p}}
+    <a href="{% url 'accounts:new_address' %}" target="_blank">Add new address</a>
+    <input type="submit" value="Edit">
+</form>
+
+{% endblock %}
