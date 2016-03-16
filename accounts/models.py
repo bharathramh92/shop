@@ -36,7 +36,7 @@ class Address(models.Model):
     country_code_phone_number = models.CharField(max_length=5, null=False)
     added_datetime = models.DateTimeField(default=timezone.now)
     last_updated_datetime = models.DateTimeField(null=True, blank=True)
-    user = models.ForeignKey(UserExtended, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.contact_name + ' ' + self.street_address_line_1 + ' ' + self.street_address_line_2 \

@@ -5,5 +5,5 @@
 {% block body %}
     <p><a href="{% url 'accounts:change_password' %}">Change Password</a></P>
 {% if user.is_authenticated %}Hello, {{ user.username }}.{% endif %}
-<p><a href="{% url 'sell:dashboard' %}">Seller dashboard</a></p>
+<p><a href="{% url 'seller:dashboard' %}">Seller dashboard</a></p>
 {% endblock %}

@@ -326,7 +326,7 @@ def new_address(request):
             phone_number = form.cleaned_data['phone_number']
             country_code_phone_number = form.cleaned_data['country_code_phone_number']
 
-            Address.objects.create(user=request.user.userextended, contact_name=contact_name,
+            Address.objects.create(user=request.user, contact_name=contact_name,
                                    country_name=country_name, city_name=city_name,state_name=state_name,
                                    street_address_line_1=street_address_line_1,
                                    street_address_line_2=street_address_line_2, zipcode=zipcode,
