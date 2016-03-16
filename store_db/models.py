@@ -84,9 +84,9 @@ class Inventory(models.Model):
     domestic_shipping_cost = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)
     free_domestic_shipping = models.BooleanField(null=False, blank=False)
 
-    international_shipping_company = models.CharField(max_length=100, null=True, blank=True)
-    international_shipping_cost = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)
-    free_international_shipping = models.BooleanField(null=False, blank=False)
+    # international_shipping_company = models.CharField(max_length=100, null=True, blank=True)
+    # international_shipping_cost = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)
+    # free_international_shipping = models.BooleanField(null=False, blank=False)
 
     local_pick_up_accepted = models.BooleanField(null=False, blank=False)
 
@@ -188,10 +188,11 @@ class Publisher(models.Model):
     contact_email = models.EmailField(null=True, blank=True)
     created_by = models.ForeignKey(User, null=True, blank=True)
 
-    test = models.ManyToManyField(
+    test = models.ForeignKey(
         'self',
         blank=True,
-        related_name='related_test_models'
+        null=True,
+        related_name='related_publisher_test_models'
     )
 
     def __str__(self):
