@@ -62,7 +62,7 @@ class Inventory(models.Model):
     Item Seller interface
     """
     item = models.ForeignKey(Item, related_name='item_inventory')
-    seller = models.ForeignKey(User, related_name='seller_inventory')
+    seller = models.ForeignKey(User, related_name='seller_inventory', on_delete=models.CASCADE)
 
     price = models.DecimalField(max_digits=19, decimal_places=4)
     # http://www.xe.com/iso4217.php use this to populate
@@ -71,19 +71,19 @@ class Inventory(models.Model):
     total_sold = models.PositiveIntegerField(default=0, null=False, blank=False)
 
     item_location = models.ForeignKey(Address, related_name='item_location_address')
-
-    DOMESTIC, WORLDWIDE = "Domestic", "Worldwide"
-    AVAILABLE_COUNTRY_CHOICES = (
-        (DOMESTIC, "Domestic"),
-        (WORLDWIDE, "Worldwide")
-    )
-    # origin country or worldwide
-    available_countries = models.CharField(max_length=12, choices=AVAILABLE_COUNTRY_CHOICES,
-                                           default=WORLDWIDE, null=False, blank=False)
-    domestic_shipping_company = models.CharField(max_length=100, null=True, blank=True)
-    domestic_shipping_cost = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)
     free_domestic_shipping = models.BooleanField(null=False, blank=False)
 
+    # domestic_shipping_company = models.CharField(max_length=100, null=True, blank=True)
+    # domestic_shipping_cost = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)
+
+    # DOMESTIC, WORLDWIDE = "Domestic", "Worldwide"
+    # AVAILABLE_COUNTRY_CHOICES = (
+    #     (DOMESTIC, "Domestic"),
+    #     (WORLDWIDE, "Worldwide")
+    # )
+    # # origin country or worldwide
+    # available_countries = models.CharField(max_length=12, choices=AVAILABLE_COUNTRY_CHOICES,
+    #                                        default=WORLDWIDE, null=False, blank=False)
     # international_shipping_company = models.CharField(max_length=100, null=True, blank=True)
     # international_shipping_cost = models.DecimalField(max_digits=19, decimal_places=4, null=True, blank=True)
     # free_international_shipping = models.BooleanField(null=False, blank=False)
@@ -146,7 +146,7 @@ class Dispute(models.Model):
 class Cart(models.Model):
     item = models.ForeignKey(Item, related_name="item_in_cart")
     quantity = models.PositiveIntegerField(null=False, blank=False)
-    user = models.ForeignKey(User, related_name="cart_user")
+    user = models.ForeignKey(User, related_name="cart_user", on_delete=models.CASCADE)
     added_or_updated_datetime = models.DateTimeField(default=timezone.now)
 
 #############################################################################
@@ -171,7 +171,7 @@ class ItemFeedback(models.Model):
 
 class SellerFeedback(models.Model):
     reviewer = models.ForeignKey(User, related_name='reviewed_by')
-    seller = models.ForeignKey(User, related_name='seller')
+    seller = models.ForeignKey(User, related_name='seller', on_delete=models.CASCADE)
     review_description = models.CharField(max_length=1000, null=False, blank=False)
     review_points = models.PositiveSmallIntegerField(null=False, blank=False)
     posting_datetime = models.DateTimeField(default=timezone.now)
@@ -186,7 +186,7 @@ class Publisher(models.Model):
     description = models.CharField(max_length=1000, null=True, blank=True)
     website = models.URLField(null=True, blank=True)
     contact_email = models.EmailField(null=True, blank=True)
-    created_by = models.ForeignKey(User, null=True, blank=True)
+    created_by = models.ForeignKey(User, null=True, blank=True )
 
     test = models.ForeignKey(
         'self',
