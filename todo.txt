@@ -16,3 +16,6 @@ cart feature only if the user has signed in
 slug url
 
 when new inventory is added, make some kind of algorithm to list the sellers.
+
+past orders/accessing them
+
