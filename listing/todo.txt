@@ -1,0 +1,18 @@
+search based on
+
+relevance
+posting time
+price low to high
+price high to low
+avg rating
+total number of distinct rating (popular)
+
+shop by department
+json department select
+
+
+cart feature only if the user has signed in
+
+slug url
+
+when new inventory is added, make some kind of algorithm to list the sellers.
