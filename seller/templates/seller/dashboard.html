@@ -1,19 +1,38 @@
-{% extends "seller/base.html" %}
+{% extends "base/base.html" %}
 
-{% block title %}Add Book{% endblock %}
+{% block title %}Inventory{% endblock %}
 
 {% block body %}
 
-<p><a href="{% url 'seller:new' %}">Sell an item</a></p>
+<div class="row text-center">
+    <div class="col-lg-12">
+        <h2><a href="{% url 'seller:new' %}">Sell another item?</a></h2>
+    </div>
+</div>
 
-{% for inventory in inventories %}
-{{ inventory.item.title|upper }}<br />
-<p>
-    Total items in stock {{inventory.total_available_stock}} and sold {{inventory.total_sold}}.
-    <a href="{% url 'seller:edit_inventory' inventory.pk %}">To edit the inventory, click here.</a>
+{%if inventories %}
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Item</th>
+        <th>Total Sold</th>
+        <th>In-Stock</th>
+        <th>Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for inventory in inventories %}
+    <tr>
+        <td>{{ inventory.item.title|upper }}</td>
+        <td>{{ inventory.total_sold }}</td>
+        <td>{{ inventory.total_available_stock }}</td>
+        <td><a href="{% url 'seller:edit_inventory' inventory.pk %}">Edit this inventory</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
-</p>
-{% endfor %}
 
 <div class="pagination">
     <span class="step-links">

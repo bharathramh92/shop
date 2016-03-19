@@ -4,7 +4,7 @@ from category_tree.categories import store_names, final_categories
 from accounts.models import Address
 from django.core.exceptions import ObjectDoesNotExist
 from dal import autocomplete
-
+from datetimewidget.widgets import DateTimeWidget
 
 class ItemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -19,7 +19,6 @@ class ItemForm(forms.ModelForm):
 
 
 class StoreSelectForm(forms.Form):
-    print(store_names)
     store_name_choices = store_names.items()
     store_names = forms.ChoiceField(label="Select a store", choices=store_name_choices)
 
@@ -37,7 +36,8 @@ class NewBookForm(forms.ModelForm):
     def clean_isbn_13(self):
         isbn_13 = self.cleaned_data['isbn_13']
         try:
-            if len(str(int(isbn_13))) != 13:
+            int(isbn_13)
+            if len(isbn_13) != 13:
                 raise NotLen13ISBNException
             elif self.isbn is None or self.isbn != isbn_13:
                 raise UnMatchedISBNException
@@ -53,7 +53,8 @@ class NewBookForm(forms.ModelForm):
     def clean_isbn_10(self):
         isbn = self.cleaned_data['isbn_10']
         try:
-            if len(str(int(isbn))) != 10:
+            int(isbn)
+            if len(isbn) != 10:
                 raise NotLen10ISBNException
         except ValueError:
             self.add_error('isbn_10', "ISBN 10 should be a number")
@@ -81,7 +82,8 @@ class NewBookISBNCheckForm(forms.Form):
     def clean_isbn(self):
         isbn = self.cleaned_data['isbn']
         try:
-            if len(str(int(isbn))) != 13:
+            int(isbn)
+            if len(isbn) != 13:
                 raise NotLen13ISBNException
         except ValueError:
             self.add_error('isbn', "ISBN should be a number")
@@ -129,23 +131,25 @@ class NewBookPublisherForm(forms.ModelForm):
 class InventoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
-        print(user)
         address = kwargs.pop('item_location', None)
-        print(address)
         super(InventoryForm, self).__init__(*args, **kwargs)
         if user is not None:
             self.fields['item_location'] = forms.ModelChoiceField(label="Item Location", initial=address,
-                                                            queryset=Address.objects.filter(user=user))
+                                                                  queryset=Address.objects.filter(user=user))
 
     class Meta:
         model = Inventory
         exclude = ['item', 'seller', 'total_sold', 'currency', 'visibility', 'rating', ]
         labels = {'condition': 'Item Condition', }
+        widgets = {
+            'listing_end_datetime': DateTimeWidget(attrs={'id': "listing_end_datetime"},
+                                                   usel10n=True, bootstrap_version=3),
+        }
         help_texts = {
             'dispatch_max_time': 'In hours',
             'free_domestic_shipping': 'If free shipping is not available,'
                                       ' standard shipping rates would be applied on the order.',
-            'local_pick_up_accepted': 'Pick charge will always be free',
+            'local_pick_up_accepted': 'Pick charge will always be free for the customer.',
         }
 
 

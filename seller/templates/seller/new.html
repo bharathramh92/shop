@@ -1,13 +1,33 @@
-{% extends "seller/base.html" %}
+{% extends "base/base.html" %}
 
 {% block title %}Add New Item{% endblock %}
 
 {% block body %}
 
-<form action="{% url 'seller:new' %}" method="post">
-        {% csrf_token %}
-        {{ storeForm }}
-        <input type="submit" value="Add">
-    </form>
+
+<form class="form-horizontal" action="{% url 'seller:new' %}" method="post">
+    {{ storeForm.non_field_errors }}
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="{{ storeForm.store_names.id_for_label }}">Select a Store: </label>
+        <div class="col-lg-4">
+            {{storeForm.store_names}}
+        </div>
+        <div class="col-lg-4">
+            {{ form.store_names.errors }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-4 col-lg-4">
+            <div class="span2">
+                <button type="submit" class="btn btn-success btn-block">Add</button>
+            </div>
+        </div>
+    </div>
+
+
+</form>
 
 {% endblock %}

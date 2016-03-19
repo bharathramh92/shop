@@ -36,9 +36,11 @@ class AuthorAutocomplete(autocomplete.Select2QuerySetView):
             return Author.objects.none()
 
         qs = Author.objects.all()
-
+        # limit the query result to 10
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(name__istartswith=self.q)[:10]
+        else:
+            qs = qs[:10]
 
         return qs
 
@@ -50,9 +52,11 @@ class PublisherAutocomplete(autocomplete.Select2QuerySetView):
             return Publisher.objects.none()
 
         qs = Publisher.objects.all()
-
+        # limit the query result to 10
         if self.q:
-            qs = qs.filter(name__istartswith=self.q)
+            qs = qs.filter(name__istartswith=self.q)[:10]
+        else:
+            qs = qs[:10]
 
         return qs
 
@@ -156,11 +160,7 @@ def add_new_book(request, isbn):
         forms['publisherForm'] = publisherForm
         forms['isbn'] = isbn
 
-        # check whether it's valid:
         if bookForm.is_valid() and itemForm.is_valid() and authorForm.is_valid() and publisherForm.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             title = itemForm.cleaned_data['title']
             description = itemForm.cleaned_data['description']
             shipping_product_dimension_height = itemForm.cleaned_data['shipping_product_dimension_height']
