@@ -103,8 +103,13 @@ class Inventory(models.Model):
     condition = models.CharField(max_length=1, choices=CONDITION_CHOICES, default=NEW, null=False, blank=False)
     visibility = models.BooleanField(default=True)
 
+    rating = models.PositiveIntegerField(default=1, blank=False, null=False)
+
     def __str__(self):
         return "%s... by %s %s" % (self.item.title[:20], self.seller.first_name, self.seller.last_name)
+
+    def has_expired(self):
+        return self.listing_end_datetime < timezone.now()
 
 
 # remaining details are pending for payment
@@ -233,3 +238,10 @@ class BookStore(models.Model):
         return self.item.title
 
 ##########################################################################
+
+
+class SellerRating(models.Model):
+    seller = models.OneToOneField(User, related_name='seller_rank', on_delete=models.CASCADE)
+    points = models.PositiveIntegerField(null=False, blank=False)
+
+
