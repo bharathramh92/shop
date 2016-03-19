@@ -1,10 +1,10 @@
 {% extends "base/base.html" %}
 
-{% block title %}New Address{% endblock %}
+{% block title %}Edit Address{% endblock %}
 
 {% block body %}
 
-<form class="form-horizontal" action="{% url 'accounts:new_address' %}" method="post">
+<form class="form-horizontal" action="{% url 'accounts:edit_address' form.instance.pk%}" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
 
@@ -13,7 +13,7 @@
         <div class="col-lg-4">
             <input type="text" class="form-control" id="{{ form.contact_name.id_for_label }}" required
                    name = "{{ form.contact_name.html_name }}"
-                   maxlength="100"/>
+                   maxlength="100" value="{{ form.contact_name.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.contact_name.errors }}
@@ -27,7 +27,7 @@
         <div class="col-lg-4">
             <input type="text" class="form-control" id="{{ form.street_address_line_1.id_for_label }}" required
                    name = "{{ form.street_address_line_1.html_name }}"
-                   maxlength="100"/>
+                   maxlength="100" value="{{ form.street_address_line_1.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.street_address_line_1.errors }}
@@ -41,7 +41,7 @@
         <div class="col-lg-4">
             <input type="text" class="form-control" id="{{ form.street_address_line_2.id_for_label }}"
                    name = "{{ form.street_address_line_2.html_name }}"
-                   maxlength="100"/>
+                   maxlength="100" value="{{ form.street_address_line_2.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.street_address_line_2.errors }}
@@ -55,7 +55,7 @@
         <div class="col-lg-4">
             <input type="number" class="form-control" id="{{ form.zipcode.id_for_label }}"
                    name = "{{ form.zipcode.html_name }}"
-                   maxlength="10"/>
+                   maxlength="10" value="{{ form.zipcode.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.zipcode.errors }}
@@ -67,7 +67,7 @@
         <div class="col-lg-4">
             <input type="text" class="form-control" id="{{ form.state_name.id_for_label }}" required
                    name = "{{ form.state_name.html_name }}"
-                   maxlength="100"/>
+                   maxlength="100" value="{{ form.state_name.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.state_name.errors }}
@@ -79,7 +79,7 @@
         <div class="col-lg-4">
             <input type="text" class="form-control" id="{{ form.city_name.id_for_label }}" required
                    name = "{{ form.city_name.html_name }}"
-                   maxlength="100"/>
+                   maxlength="100" value="{{ form.city_name.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.city_name.errors }}
@@ -91,7 +91,7 @@
         <div class="col-lg-4">
             <input type="text" class="form-control" id="{{ form.country_name.id_for_label }}" required
                    name = "{{ form.country_name.html_name }}"
-                   maxlength="100"/>
+                   maxlength="100" value="{{ form.country_name.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.country_name.errors }}
@@ -105,7 +105,7 @@
         <div class="col-lg-4">
             <input type="tel" class="form-control" id="{{ form.country_code_phone_number.id_for_label }}" required
                    name = "{{ form.country_code_phone_number.html_name }}"
-                   maxlength="5"/>
+                   maxlength="5" value="{{ form.country_code_phone_number.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.country_code_phone_number.errors }}
@@ -117,7 +117,7 @@
         <div class="col-lg-4">
             <input type="tel" class="form-control" id="{{ form.phone_number.id_for_label }}" required
                    name = "{{ form.phone_number.html_name }}"
-                   maxlength="15"/>
+                   maxlength="15" value="{{ form.phone_number.value }}"/>
         </div>
         <div class="col-lg-4">
             {{ form.phone_number.errors }}
@@ -127,7 +127,7 @@
     <div class="form-group">
         <div class="col-lg-offset-4 col-lg-4">
             <div class="span2">
-                <button type="submit" class="btn btn-success btn-block"> Add New Address</button>
+                <button type="submit" class="btn btn-success btn-block"> Update this Address</button>
             </div>
         </div>
     </div>

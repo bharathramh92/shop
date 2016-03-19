@@ -1,12 +1,16 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Address
+from django.contrib.auth import authenticate
+from django.core.exceptions import ObjectDoesNotExist
+
+from accounts.models import Address
 
 login_wrong_username_password = "username/password combination was incorrect"
 registration_same_email_address = "User exists with same email id. Use different email address"
 registration_passwords_not_matching = "Passwords are not matching"
 email_not_found = "Given email address not found in our database. Please check again and enter the email address."
 wrong_current_password = "Current password is wrong."
+login_username_password_null = "Please enter username/password"
 
 
 class LoginForm(forms.Form):
@@ -20,14 +24,24 @@ class LoginForm(forms.Form):
                                     max_length=20,
                                     required=True)
 
-    def clean_username(self):
-        username = self.cleaned_data['username']
+    def clean(self):
+        cleaned_data = super(LoginForm, self).clean()
+        username = cleaned_data.get('username')
+        login_password = cleaned_data.get('loginPassword')
+
+        if username is None or login_password is None:
+            raise forms.ValidationError(login_username_password_null, code='invalid')
+
         if '@' in username:
             try:
                 username = User.objects.get(email=username).username
-            except Exception:
+            except ObjectDoesNotExist:
                 raise forms.ValidationError(login_wrong_username_password, code='invalid')
-        return username
+
+        user = authenticate(username=username, password=login_password)
+        if user is None:
+            self.add_error('loginPassword', login_wrong_username_password)
+        self.cleaned_data['user'] = user
 
 
 def does_email_exists(email):
@@ -78,8 +92,6 @@ class RegisterForm(forms.Form):
         if password != confirm_password:
             self.add_error('password', registration_passwords_not_matching)
 
-        return cleaned_data
-
 
 class EmailForm(forms.Form):
 
@@ -117,8 +129,6 @@ class ForgotPasswordForm(forms.Form):
         if password != confirm_password:
             self.add_error('password', registration_passwords_not_matching)
 
-        return cleaned_data
-
 
 class ChangePasswordForm(forms.Form):
 
@@ -127,7 +137,7 @@ class ChangePasswordForm(forms.Form):
                                       max_length=20,
                                       required=True)
 
-    newPassword = forms.CharField(widget= forms.PasswordInput,
+    newPassword = forms.CharField(widget=forms.PasswordInput,
                                   label='New Password',
                                   max_length=20,
                                   required=True)
@@ -142,7 +152,6 @@ class ChangePasswordForm(forms.Form):
         super(ChangePasswordForm, self).__init__(*args, **kwargs)
 
     def clean(self):
-        print("user in form ", self.user)
         cleaned_data = super(ChangePasswordForm, self).clean()
         current_password = cleaned_data.get('currentPassword')
         new_password = cleaned_data.get('newPassword')
@@ -154,10 +163,28 @@ class ChangePasswordForm(forms.Form):
         if new_password != confirm_new_password:
             self.add_error('newPassword', registration_passwords_not_matching)
 
-        return cleaned_data
-
 
 class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
         exclude = ['user', 'last_updated_datetime', 'added_datetime']
+
+
+class AccountForm(forms.Form):
+
+    firstName = forms.CharField(label='First Name',
+                                max_length=30,
+                                required=True)
+
+    lastName = forms.CharField(label='First Name',
+                               max_length=30,
+                               required=True)
+
+    countryCodePhoneNumber = forms.CharField(label='Phone number country code',
+                                             max_length=5,
+                                             required=False)
+
+    phoneNumber = forms.CharField(widget=forms.NumberInput,
+                                  label='Phone number',
+                                  max_length=15,
+                                  required=False)

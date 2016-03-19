@@ -1,23 +1,57 @@
-{% extends "accounts/base.html" %}
+{% extends "base/base.html" %}
 
 {% block title %}Login{% endblock %}
 
 {% block body %}
-    <p>Login Form</p>
+<div class="row">
+    <div class="col-lg-4 col-centered">
+        <h3>Login Form</h3>
+    </div>
+</div>
 
-    {% for login_error_message in login_error_messages %}
-      <p>{{login_error_message}}</p>
-    {% endfor %}
-
-    <form action="{% url 'accounts:login' %}" method="post">
+    <form class="form-horizontal" action="{% url 'accounts:login' %}" method="post">
         {% csrf_token %}
-        {{ loginForm }}
-        <input type="submit" name="login" value="Login">
+        {{ loginForm.non_field_errors }}
+
+        <div class="form-group">
+            <label class="control-label col-lg-4" for="{{ loginForm.username.id_for_label }}">Username/Email:</label>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" id="{{ loginForm.username.id_for_label }}"
+                       placeholder="Enter Username/Email" required name = "{{ loginForm.username.html_name }}"
+                       maxlength="100"/>
+            </div>
+            <div class="col-lg-4">
+                {{ loginForm.username.errors }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-lg-4" for="{{ loginForm.loginPassword.id_for_label }}">Password:</label>
+            <div class="col-lg-4">
+                <input type="password" class="form-control" id="{{ loginForm.loginPassword.id_for_label }}"
+                       placeholder="Enter password" required name = "{{ loginForm.loginPassword.html_name }}"
+                       maxlength="100"/>
+            </div>
+            <div class="col-lg-4">
+                {{ loginForm.loginPassword.errors }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-offset-4 col-lg-4">
+                <div class="span2">
+                    <button type="submit" class="btn btn-success btn-block"> Login</button>
+                </div>
+            </div>
+        </div>
+
     </form>
-<br/>
-    <a href="{% url 'accounts:trouble_login' %}"><p>Need help?</p></a>
-<br/>
 
-<a href="{% url 'accounts:register' %}"><p>Create new account? Click here</p> </a>
-
+<div class="row">
+    <div class="col-lg-4 col-centered">
+        <br/>
+        <a href="{% url 'accounts:trouble_login' %}"><p>Need help?</p></a>
+        <a href="{% url 'accounts:register' %}"><p>Create new account? Click here</p> </a>
+    </div>
+</div>
 {% endblock %}

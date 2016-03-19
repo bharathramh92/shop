@@ -1,15 +1,18 @@
 import random
+import datetime
 
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from accounts.models import User, UserExtended, EmailVerification, ForgotPasswordVerification, Address
 from shop import settings_sensitive
 from accounts.forms import RegisterForm, LoginForm, ForgotPasswordForm, EmailForm, AddressForm, ChangePasswordForm
+from accounts.forms import AccountForm
 
 login_wrong_username_password = "username/password combination was incorrect"
 registration_email_verification = "Please click the following link to verify your account"
@@ -57,7 +60,6 @@ def register_view(request):
         return l_name[:3]+f_name[:3]+'_' + \
                ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for _ in range(6))
 
-    register_errors = []
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -85,30 +87,20 @@ def register_view(request):
             send_verification_email(user)
             return render(request, "accounts/new_user_registered.html", {})
 
-        else:
-            register_errors.append(registration_same_email_address)
-
     # if a GET (or any other method) we'll create a blank form
     else:
         form = RegisterForm()
 
-    return render(request, "accounts/register.html", {'registerForm': form, 'register_errors': register_errors})
+    return render(request, "accounts/register.html", {'registerForm': form})
 
 
 def login_view(request):
     # if this is a POST request we need to process the form data
     login_errors = []
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = LoginForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            username = form.cleaned_data['username']
-            login_password = form.cleaned_data['loginPassword']
-            user = authenticate(username=username, password=login_password)
+            user = form.cleaned_data['user']
             if user is not None:
                 # the password verified for the user
                 if user.is_active:
@@ -120,8 +112,6 @@ def login_view(request):
                 else:
                     return render(request, "accounts/account_disabled.html", {})
                     # print("The password is valid, but the account has been disabled!")
-            else:
-                login_errors.append(login_wrong_username_password)
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -153,7 +143,94 @@ def send_forgot_password_verification_email(user):
 
 @login_required()
 def dashboard_view(request):
+
     return render(request, "accounts/dashboard.html", {})
+
+
+@login_required()
+def change_account_details_view(request):
+    user = request.user
+    data = {'firstName': user.first_name,
+            'lastName': user.last_name,
+            'countryCodePhoneNumber': user.userextended.country_code_phone_number,
+            'phoneNumber': user.userextended.phone_number}
+    if request.method == 'POST':
+        form = AccountForm(request.POST, initial=data)
+        if form.is_valid():
+            user.first_name = form.cleaned_data['firstName']
+            user.last_name = form.cleaned_data['lastName']
+            user.userextended.country_code_phone_number = form.cleaned_data['countryCodePhoneNumber']
+            user.userextended.phone_number = form.cleaned_data['phoneNumber']
+            user.save()
+            return render(request, "accounts/change_account_details.html", {'form': form, 'updated': True})
+
+    else:
+        form = AccountForm(initial=data)
+
+    return render(request, "accounts/change_account_details.html", {'form': form})
+
+
+@login_required()
+def address_view(request):
+    deleted = False
+    if 'deleted' in request.GET:
+        deleted = True
+    address_list = Address.objects.filter(user=request.user)
+    paginator = Paginator(address_list, 25)     # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        addresses = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        addresses = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        addresses = paginator.page(paginator.num_pages)
+
+    return render(request, 'accounts/address.html', {'addresses': addresses, 'deleted': deleted})
+
+
+@login_required()
+def edit_address_view(request, pk):
+    address = get_object_or_404(Address, pk=pk, user=request.user)
+    if request.method == 'POST':
+        form = AddressForm(request.POST, instance=address)
+        if form.is_valid():
+            contact_name = form.cleaned_data['contact_name']
+            country_name = form.cleaned_data['country_name']
+            city_name = form.cleaned_data['city_name']
+            state_name = form.cleaned_data['state_name']
+            street_address_line_1 = form.cleaned_data['street_address_line_1']
+            street_address_line_2 = form.cleaned_data['street_address_line_2']
+            zipcode = form.cleaned_data['zipcode']
+            phone_number = form.cleaned_data['phone_number']
+            country_code_phone_number = form.cleaned_data['country_code_phone_number']
+
+            address.contact_name = contact_name
+            address.country_name = country_name
+            address.city_name = city_name
+            address.state_name = state_name
+            address.street_address_line_1 = street_address_line_1
+            address.street_address_line_2 = street_address_line_2
+            address.zipcode = zipcode
+            address.phone_number = phone_number
+            address.country_code_phone_number = country_code_phone_number
+            address.last_updated_datetime = datetime.datetime.now()
+
+            address.save()
+            return HttpResponseRedirect(reverse('accounts:address'))
+    else:
+        form = AddressForm(instance=address)
+
+    return render(request, "accounts/edit_address.html", {'form': form})
+
+
+@login_required()
+def delete_address_view(request, pk):
+    address = get_object_or_404(Address, pk=pk, user=request.user)
+    address.delete()
+    return HttpResponseRedirect(reverse("accounts:address") + '?deleted=true')
 
 
 @login_required()
@@ -258,13 +335,8 @@ def resend_verification_email_view(request):
         return HttpResponseRedirect(reverse('accounts:dashboard'))
 
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = EmailForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
 
             email = form.cleaned_data['email']
             user = User.objects.get(email=email)
@@ -274,7 +346,6 @@ def resend_verification_email_view(request):
             send_verification_email(user)
             return render(request, "accounts/resend_verification_email.html", {'success': True})
 
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = EmailForm()
 
@@ -334,7 +405,7 @@ def new_address(request):
                                    country_code_phone_number=country_code_phone_number,
                                    )
 
-            return render(request, "accounts/new_address_added.html", {})
+            return HttpResponseRedirect(reverse("accounts:address"))
 
     # if a GET (or any other method) we'll create a blank form
     else:

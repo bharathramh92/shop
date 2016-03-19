@@ -1,9 +1,53 @@
-{% extends "accounts/base.html" %}
+{% extends "base/base.html" %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
-    <p><a href="{% url 'accounts:change_password' %}">Change Password</a></P>
-{% if user.is_authenticated %}Hello, {{ user.username }}.{% endif %}
-<p><a href="{% url 'seller:dashboard' %}">Seller dashboard</a></p>
+Welcome, {{ user.userextended.get_full_name }}
+
+<br/>
+<br/>
+<div class="row ">
+        <div class="col-xs-8">
+            <div class="panel panel-default panel-body">
+            <div class="col-xs-4">
+                <p>Settings</p>
+            </div>
+            <div class="col-xs-4">
+                <p><a href="{% url 'accounts:change_password' %}">Change Password</a></p>
+                <p><a href="{% url 'accounts:change_account_details' %}">Change Account details</a></p>
+            </div>
+            <div class="col-xs-4">
+                <p><a href="{% url 'accounts:address' %}">Manage Addresses</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row ">
+    <div class="col-xs-8">
+        <div class="panel panel-default panel-body">
+            <div class="col-xs-4">
+                <p>Orders</p>
+            </div>
+            <div class="col-xs-4">
+                <p><a href="{% url 'seller:orders' %}">Past orders</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row ">
+    <div class="col-xs-8">
+        <div class="panel panel-default panel-body">
+            <div class="col-xs-4">
+                <p>Sales</p>
+            </div>
+            <div class="col-xs-4">
+                <p><a href="{% url 'seller:dashboard' %}">Seller dashboard</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

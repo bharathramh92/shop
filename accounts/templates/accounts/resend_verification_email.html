@@ -1,4 +1,4 @@
-{% extends "accounts/base.html" %}
+{% extends "base/base.html" %}
 
 {% block title %}Resend verification email{% endblock %}
 
@@ -9,10 +9,33 @@
 {% elif already_verified %}
 <p>Your email was already verified. To reset the password, Click <a href="{% url 'accounts:forget_password'%}">here</a>.</p>
 {% else %}
-<form action="{% url 'accounts:resend_verification_email' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" name="resend" value="Re-Send Email">
+<form class="form-horizontal" action="{% url 'accounts:resend_verification_email' %}" method="post">
+    {{ form.non_field_errors }}
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="{{ form.email.id_for_label }}">Email:</label>
+        <div class="col-lg-4">
+            <input type="email" class="form-control" id="{{ form.email.id_for_label }}"
+                   placeholder="Email address" required name = "{{ form.email.html_name }}"
+                   maxlength="100"/>
+        </div>
+        <div class="col-lg-4">
+            {{ form.email.errors }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-4 col-lg-4">
+            <div class="span2">
+                <button type="submit" class="btn btn-success btn-block">Re-Send Email</button>
+            </div>
+        </div>
+    </div>
     </form>
 {% endif %}
 {% endblock %}
+
+<form action="{% url 'accounts:forget_password' %}" method="post">
+
+</form>

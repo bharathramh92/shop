@@ -14,14 +14,17 @@ class UserExtended(models.Model):
         (FEMALE, "Female")
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
-    phone_number = models.CharField(max_length=15, null=True, blank=True)
-    country_code_phone_number = models.CharField(max_length=5, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True, default="")
+    country_code_phone_number = models.CharField(max_length=5, null=True, blank=True, default="+1")
     is_email_verified = models.BooleanField(default=False)
     email_verified_datetime = models.DateTimeField(null=True, blank=True)
     is_phone_number_verified = models.BooleanField(default=False)
     phone_number_verified_datetime = models.DateTimeField(null=True, blank=True)
     phone_number_updated_datetime = models.DateTimeField(null=True, blank=True)
     last_updated_password_datetime = models.DateTimeField(null=True, blank=True)
+
+    def get_full_name(self):
+        return "%s %s" % (self.user.first_name, self.user.last_name)
 
 
 class Address(models.Model):

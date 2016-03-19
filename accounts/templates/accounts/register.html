@@ -1,21 +1,93 @@
-{% extends "accounts/base.html" %}
+{% extends "base/base.html" %}
 
 {% block title %}Register{% endblock %}
 
 {% block body %}
 
-<p>Register Form</p>
+<div class="row">
+    <div class="col-lg-4 col-centered">
+        <h3>Register Form</h3>
+    </div>
+</div>
 
-{% for register_error_message in register_error_messages %}
-<p>register_error_message</p>
-{% endfor %}
-
-<form action="{% url 'accounts:register' %}" method="post">
+<form class="form-horizontal" action="{% url 'accounts:register' %}" method="post">
     {% csrf_token %}
-    {{ registerForm }}
-    <input type="submit" name="register" value="Register">
+    {{ registerForm.non_field_errors }}
+
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="{{ registerForm.email.id_for_label }}">Email:</label>
+        <div class="col-lg-4">
+            <input type="email" class="form-control" id="{{ registerForm.email.id_for_label }}"
+                   placeholder="Email" required name = "{{ registerForm.email.html_name }}"
+                   maxlength="100"/>
+        </div>
+        <div class="col-lg-4">
+            {{ registerForm.email.errors }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="{{ registerForm.firstName.id_for_label }}">First Name:</label>
+        <div class="col-lg-4">
+            <input type="text" class="form-control" id="{{ registerForm.firstName.id_for_label }}"
+                   placeholder="First Name" required name = "{{ registerForm.firstName.html_name }}"
+                   maxlength="30"/>
+        </div>
+        <div class="col-lg-4">
+            {{ registerForm.firstName.errors }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="{{ registerForm.lastName.id_for_label }}">Last Name:</label>
+        <div class="col-lg-4">
+            <input type="text" class="form-control" id="{{ registerForm.lastName.id_for_label }}"
+                   placeholder="Last Name" required name = "{{ registerForm.lastName.html_name }}"
+                   maxlength="30"/>
+        </div>
+        <div class="col-lg-4">
+            {{ registerForm.lastName.errors }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="{{ registerForm.password.id_for_label }}">Password:</label>
+        <div class="col-lg-4">
+            <input type="password" class="form-control" id="{{ registerForm.password.id_for_label }}"
+                   placeholder="Password" required name = "{{ registerForm.password.html_name }}"
+                   maxlength="20"/>
+        </div>
+        <div class="col-lg-4">
+            {{ registerForm.password.errors }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-lg-4" for="{{ registerForm.confirmPassword.id_for_label }}">Confirm Password:</label>
+        <div class="col-lg-4">
+            <input type="password" class="form-control" id="{{ registerForm.confirmPassword.id_for_label }}"
+                   placeholder="Confirm Password" required name = "{{ registerForm.confirmPassword.html_name }}"
+                   maxlength="20"/>
+        </div>
+        <div class="col-lg-4">
+            {{ registerForm.confirmPassword.errors }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-4 col-lg-4">
+            <div class="span2">
+                <button type="submit" class="btn btn-success btn-block"> Register</button>
+            </div>
+        </div>
+    </div>
+
 </form>
 
-<a href="{% url 'accounts:login' %}"><p>Go back to login Page.</p> </a>
+<div class="row">
+    <div class="col-lg-4 col-centered">
+        <a href="{% url 'accounts:login' %}"><p>Go back to login Page.</p> </a>
+    </div>
+</div>
 
 {% endblock %}
