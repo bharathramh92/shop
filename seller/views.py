@@ -10,12 +10,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from dal import autocomplete
 
-
 from seller.forms import StoreSelectForm, NewBookForm, NewBookISBNCheckForm, ItemForm, \
     InventoryForm, NewAuthorForm, NewPublisherForm
-from .forms import NewBookAuthorForm, NewBookPublisherForm
+from seller.forms import NewBookAuthorForm, NewBookPublisherForm
 from store_db.models import BookStore, Item, Author, Publisher, Inventory
 from category_tree.categories import *
+from seller.ranking import rank_seller_from_inventory, rank_seller, get_ranked_inventory_list
 
 
 def rand_alphanumeric(length=100):
@@ -78,6 +78,11 @@ def dashboard_view(request):
 
 
 @login_required()
+def orders_view(request):
+    return render(request, 'seller/orders.html', {})
+
+
+@login_required()
 def new_view(request):
     # To redirect the user to their respective store.
     if request.method == 'POST':
@@ -102,16 +107,17 @@ def add_new_book_pk_check(request):
         if form.is_valid():
             isbn = form.cleaned_data['isbn']
             try:
-                book = BookStore.objects.get(pk=isbn)
-                if Inventory.objects.filter(item=book.item) != 0:
+                book = BookStore.objects.get(isbn_13=isbn)
+                inventories = Inventory.objects.filter(item=book.item, seller=request.user)
+                if len(inventories) != 0:
                     # If the user tries to add his previously added book again, we will redirect him to edit inventory.
-                    return HttpResponse(reverse('seller:edit_inventory'))
+                    return HttpResponse(reverse('seller:edit_inventory', kwargs={'pk': inventories[0].pk}))
 
-                data_dict = {'store': store_names_reverse_map['Books'], 'id': book.pk}
+                data_dict = {'store_id': store_names_reverse_map['Books'], 'isbn_13': book.isbn_13}
                 get = '?'
                 for k, v in data_dict.items():
-                    get += k + '=' + v
-                return HttpResponse(reverse('seller:new_inventory') + get)
+                    get += k + '=' + str(v) + "&"
+                return HttpResponseRedirect(reverse('seller:new_inventory') + get)
             except ObjectDoesNotExist:
                 # if not found, create a new book
                 return HttpResponseRedirect(reverse('seller:new_book', kwargs={'isbn': isbn}))
@@ -121,7 +127,6 @@ def add_new_book_pk_check(request):
         form = NewBookISBNCheckForm()
 
     return render(request, "seller/new_book_isbn_check.html", {'isbnCheckForm': form})
-
 
 
 @login_required()
@@ -246,14 +251,14 @@ def new_inventory_view(request):
             # free_international_shipping = inventoryForm.cleaned_data['free_international_shipping']
             # available_countries = inventoryForm.cleaned_data['available_countries']
 
-            Inventory.objects.create(item=item, seller=request.user, price=price, total_available_stock= total_available_stock,
+            inventory = Inventory.objects.create(item=item, seller=request.user, price=price, total_available_stock= total_available_stock,
                                      item_location= item_location, free_domestic_shipping= free_domestic_shipping,
                                      local_pick_up_accepted= local_pick_up_accepted,
                                      dispatch_max_time= dispatch_max_time, return_accepted= return_accepted,
                                      listing_end_datetime= listing_end_datetime, condition= condition,)
+            rank_seller_from_inventory(inventory)
             return render(request, 'seller/new_inventory_added.html', {})
 
-    # if a GET (or any other method) we'll create a blank form
     else:
         inventoryForm = InventoryForm(user= request.user)
     return render(request, 'seller/new_inventory.html', {'inventoryForm': inventoryForm, 'get_params': get_from_request_GET(request)})
@@ -283,6 +288,7 @@ def edit_inventory_view(request, pk):
             inventory.listing_end_datetime = form.cleaned_data['listing_end_datetime']
             inventory.condition = form.cleaned_data['condition']
             inventory.save()
+            rank_seller_from_inventory(inventory)
             return render(request, 'seller/edit_inventory.html',
                           {'inventoryForm': form, 'pk': pk, 'message': "Inventory Updated"})
     else:
@@ -294,20 +300,13 @@ def edit_inventory_view(request, pk):
 @login_required()
 def new_author(request):
     pass
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = NewAuthorForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             name = form.cleaned_data['name']
             Author.objects.create(name = name, created_by = request.user)
             return render(request, 'seller/new_author_added.html', {'form': form})
 
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = NewAuthorForm()
 
@@ -316,20 +315,13 @@ def new_author(request):
 
 @login_required()
 def new_publisher(request):
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = NewPublisherForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             name = form.cleaned_data['name']
             Publisher.objects.create(name=name, created_by=request.user)
             return render(request, 'seller/new_publisher_added.html', {'form': form})
 
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = NewPublisherForm()
 

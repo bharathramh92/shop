@@ -5,8 +5,7 @@ from seller.views import PublisherAutocomplete, AuthorAutocomplete
 urlpatterns = [
 
     url(r'^$', views.dashboard_view, name="dashboard"),
-    # url(r'^editInventory/(?P<store_name>[a-zA-Z]*)/(?P<pk>[0-9]*)/$', views.editInventoryView,
-    #  name= "edit_inventory"),
+    url(r'^orders/$', views.orders_view, name="orders"),
 
     url(r'^new/$', views.new_view, name="new"),
     url(r'^inventory/add$', views.new_inventory_view, name="new_inventory"),

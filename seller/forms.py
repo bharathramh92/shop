@@ -139,7 +139,7 @@ class InventoryForm(forms.ModelForm):
 
     class Meta:
         model = Inventory
-        exclude = ['item', 'seller', 'total_sold', 'currency', 'visibility', ]
+        exclude = ['item', 'seller', 'total_sold', 'currency', 'visibility', 'rating', ]
         labels = {'condition': 'Item Condition', }
         help_texts = {
             'dispatch_max_time': 'In hours',
