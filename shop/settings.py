@@ -79,6 +79,8 @@ TEMPLATES = [
     },
 ]
 
+TEMPLATES[0]['OPTIONS']['context_processors'].append("category_tree.context_processors.store_dict_processor")
+
 WSGI_APPLICATION = 'shop.wsgi.application'
 
 

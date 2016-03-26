@@ -13,9 +13,33 @@ json department select
 
 cart feature only if the user has signed in
 
-slug url
+
 
 when new inventory is added, make some kind of algorithm to list the sellers.
 
 past orders/accessing them
 
+add price to inventory
+
+autocomplete
+    book addition,  for subcategories
+    inventory form, for address
+
+add datetimepicker widget for inventory form
+
+url from seller's inventory page to items/book. Do this after slug url.
+change email in "Change Account Details" (Seller Dashboard)
+
+Immediate requirement
+
+book view
+shop by category
+slug url
+cart
+**test cases
+
+Bug list
+
+If user already had logged in and is coming to login page, restrict him. Same for create account.
+Check if csrf is not required for sure in search tab
+order the store name in category_tree context_preprocessors
