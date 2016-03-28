@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from accounts.models import Address
 from category_tree.models import Category
+
+from django.utils.text import slugify
 ###################################################################################
 
 
@@ -39,6 +41,13 @@ class Item(models.Model):
     category = models.ManyToManyField(Category, related_name='main_sub_cat_item')
     posting_datetime = models.DateTimeField(default=timezone.now, null=False, blank=False)
     last_updated_datetime = models.DateTimeField(null=True, blank=True)
+
+    slug = models.SlugField(max_length=50)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.title)[:50]
+        super(Item, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title

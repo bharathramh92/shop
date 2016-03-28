@@ -64,7 +64,16 @@ def all_department_view(request):
     return HttpResponse("Show all departments list")
 
 
-def book_item_view(request, pk):
+def book_item(request, pk):
     book_data = get_object_or_404(BookStore, pk=pk)
     ranked_inventories = get_ranked_inventory_list(book_data.item)
     return render(request, "listing/book_view.html", {'book_data': book_data, 'ranked_inventories': ranked_inventories})
+
+
+def listing_item_view(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+    try:
+        return book_item(request, item.book_store_item.pk)
+    except Item.DoesNotExist:
+        pass
+        raise Http404

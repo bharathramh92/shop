@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from dal import autocomplete
 from datetimewidget.widgets import DateTimeWidget
 
+
 class ItemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         store_id = kwargs.pop('store_id', None)
@@ -15,7 +16,7 @@ class ItemForm(forms.ModelForm):
 
     class Meta:
         model = Item
-        exclude = ['posting_datetime', 'last_updated_datetime']
+        exclude = ['posting_datetime', 'last_updated_datetime', 'slug']
 
 
 class StoreSelectForm(forms.Form):

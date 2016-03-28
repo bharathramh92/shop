@@ -34,12 +34,12 @@ Immediate requirement
 
 book view
 shop by category
-slug url
 cart
 **test cases
 
 Bug list
 
+test slug
 If user already had logged in and is coming to login page, restrict him. Same for create account.
 Check if csrf is not required for sure in search tab
 order the store name in category_tree context_preprocessors
