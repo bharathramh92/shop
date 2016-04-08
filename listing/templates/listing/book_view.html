@@ -1,28 +1,135 @@
-{{book_data.item.title}}
-{{book_data.item.description}}
-{{book_data.item.shipping_product_dimension_height}}
-{{book_data.item.shipping_product_dimension_width}}
-{{book_data.item.shipping_product_dimension_length}}
-{{book_data.item.shipping_product_dimension_units}}
-{{book_data.item.shipping_product_weight}}
-{{book_data.item.shipping_product_weight_units}}
+{% extends "base/base.html" %}
 
-{%for category in book_data.item.category.all%}
-<p>{{ category.category_name }}</p>
-{% endfor %}
-{{book_data.item.posting_datetime}}
+{% block tophead %}
+{% load staticfiles %}
+{% endblock %}
+{% block title %}{{book_data.item.title}}{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-lg-4">
+        <img src="{% static 'base/img/no-image.jpg' %}" class="img-responsive">
+    </div>
+    <div class="col-lg-8 ">
+        <div class="col-lg-8">
+            <h1>{{book_data.item.title}}</h1>
+            <p class="text-justify">{{book_data.item.description}}</p>
+        </div>
+
+        <div class="col-lg-4 img-rounded blue_box">
+            <p>Price: {{ranked_inventories.0.price}} {{ranked_inventories.0.currency}}</p>
+            <form class="" action="{% url 'listing:add_to_cart' %}" method="get">
+                <input type="hidden" value="{{ranked_inventories.0.seller.pk}}" name="seller">
+                <input type="hidden" value="{{book_data.item.slug}}" name="item_slug">
+                <button type="submit" class="btn btn-success">Add to Cart</button>
+            </form>
+            <p>sold by {{ranked_inventories.0.seller.userextended.get_full_name}}</p>
+        </div>
+    </div>
+
+</div>
+
+{% if ranked_inventories|slice:"1:" %}
+<div class="row">
+    <div class="col-lg-8 col-offset-lg-2">
+        <h3>Other Sellers</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                  <td>Seller</td>
+                  <td>Rating</td>
+                  <td>Price</td>
+                </tr>
+            </thead>
+            <tbody>
+            {%for ri in ranked_inventories|slice:"1:" %}
+                <tr>
+                    <td>{{ri.seller}}</td>
+                    <td>{{ri.rating}}</td>
+                    <td>{{ri.price}}</td>
+                    <td>
+                        <form class="" action="{% url 'listing:add_to_cart' %}" method="get">
+                            <input type="hidden" value="{{ri.seller.pk}}" name="seller">
+                            <input type="hidden" value="{{book_data.item.slug}}" name="item_slug">
+                            <button type="submit" class="btn btn-success">Add to Cart</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="row">
+    <div class="col-lg-8 col-offset-lg-2">
+        <h3>Book Details</h3>
+        <table class="table table-hover">
+            <tbody>
+            <tr>
+                <td>Length</td>
+                <td>{{book_data.item.shipping_product_dimension_length}}</td>
+            </tr>
+            <tr>
+                <td>Width</td>
+                <td>{{book_data.item.shipping_product_dimension_width}}</td>
+            </tr>
+            <tr>
+                <td>Height</td>
+                <td>{{book_data.item.shipping_product_dimension_height}}</td>
+            </tr>
+            <tr>
+                <td>ISBN 10</td>
+                <td>{{book_data.isbn_10}}</td>
+            <tr>
+                <td>ISBN 13</td>
+                <td>{{book_data.isbn_13}}</td>
+            </tr>
+            <tr>
+                <td>Language</td>
+                <td>{{book_data.get_language_display}}</td>
+            </tr>
+            <tr>
+                <td>Authors</td>
+                <td>
+                    {%for author in book_data.authors.all%}
+                        <p class="inline_p">{{ author }}, </p>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td>Publisher</td>
+                <td>{{book_data.publisher}}</td>
+            </tr>
+            <tr>
+                <td>Categories</td>
+                <td>
+                    {%for category in book_data.item.category.all%}
+                    <p class="inline_p">{{ category.category_name }}, </p>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td>First Posting Date</td>
+                <td>{{book_data.item.posting_datetime}}</td>
+            </tr>
+            <tr>
+                <td>Product Dimension</td>
+                <td>{{book_data.item.shipping_product_dimension_length}} x {{book_data.item.shipping_product_dimension_width}}
+                x {{book_data.item.shipping_product_dimension_height}} {{book_data.item.get_shipping_product_dimension_units_display}}</td>
+            </tr>
+            <tr>
+                <td>Shipping Weight</td>
+                <td>{{book_data.item.shipping_product_weight}} {{book_data.item.get_shipping_product_weight_units_display}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <p></p>
+    </div>
+</div>
 
 
 
-{{book_data.isbn_10}}
-{{book_data.isbn_13}}
-{{book_data.language}}
-{{book_data.publisher}}
-{%for author in book_data.authors.all%}
-<p>{{ author }}</p>
-{% endfor %}
-
-
-{%for ri in ranked_inventories%}
-<p>{{ ri.seller}} {{ri.rating}}</p>
-{% endfor %}
+{% endblock %}

@@ -1,0 +1,8 @@
+.blue_box{
+    border-style: solid;
+    border-color: #3399ff;
+    border-width: 1px;
+}
+.inline_p{
+    display: inline;
+}

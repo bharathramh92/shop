@@ -7,7 +7,8 @@
 {% if results %}
 
 {% for result in results %}
-{{ result.title }}<br />
+<a href="{% url  'listing:listing_item' result.slug %}"><p>{{ result.title }}</p></a>
+<br />
 {% endfor %}
 
 <div class="pagination">

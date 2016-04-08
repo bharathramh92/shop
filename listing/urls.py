@@ -9,5 +9,8 @@ urlpatterns = [
 
     url(r'^search/$', views.search_view, name="search"),
 
-    url(r'listing/(?P<slug>[\w-]+)/$', views.listing_item_view, name="listing_item")
+    url(r'^listing/(?P<slug>[\w-]+)/$', views.listing_item_view, name="listing_item"),
+
+    url(r'^cart/$', views.add_to_cart_view, name="add_to_cart"),
+
 ]

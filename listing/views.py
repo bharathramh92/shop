@@ -77,3 +77,13 @@ def listing_item_view(request, slug):
     except Item.DoesNotExist:
         pass
         raise Http404
+
+
+def add_to_cart_view(request):
+    try:
+        seller = request.GET['seller']
+        item_slug = request.GET['item_slug']
+    except KeyError:
+        raise Http404
+    print(seller, item_slug)
+    return HttpResponse("Add to cart. Temp!")
