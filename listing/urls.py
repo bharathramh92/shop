@@ -8,9 +8,13 @@ urlpatterns = [
     url(r'^Books/(?P<pk>[0-9]+)/$', views.book_item, name="book_item"),
 
     url(r'^search/$', views.search_view, name="search"),
+    url(r'^item_by_category/(?P<category>[0-9]+)$', views.item_by_category_view, name="item_by_category"),
+
 
     url(r'^listing/(?P<slug>[\w-]+)/$', views.listing_item_view, name="listing_item"),
 
     url(r'^cart/$', views.add_to_cart_view, name="add_to_cart"),
+
+
 
 ]

@@ -4,7 +4,7 @@ from seller.ranking import get_ranked_inventory_list
 from django.shortcuts import Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from category_tree.categories import store_names
+from category_tree.categories import store_names, final_categories
 
 
 @csrf_exempt
@@ -12,6 +12,7 @@ def search_view(request):
     if request.method == 'POST':
         raise Http404
     if request.method == 'GET':
+        # sample url "search/?store=1&q=algorithm"
         if "store" not in request.GET:
             raise Http404
         store = request.GET.get("store")
@@ -25,6 +26,7 @@ def search_view(request):
             raise Http404
 
         if store == -1:
+            # all stores
             store_names_list = list(store_names.values())
         else:
             if store not in store_names:
@@ -37,7 +39,7 @@ def search_view(request):
                 # basic filter for now
                 item_list = Item.objects.filter(title__icontains=q)
 
-        paginator = Paginator(item_list, 25) # Show 25 contacts per page
+        paginator = Paginator(item_list, 25)    # Show 25 contacts per page
 
         page = request.GET.get('page')
         try:
@@ -50,6 +52,30 @@ def search_view(request):
             results = paginator.page(paginator.num_pages)
 
         return render(request, 'listing/search_result.html', {'results': results})
+
+
+def item_by_category_view(request, category):
+    try:
+        if int(category) not in final_categories:
+            raise Exception("category not present in db")
+    except (ValueError, Exception) as _:
+        print("Value error")
+        raise Http404
+    end_categories = final_categories[int(category)]
+    # this is not required. Django still works with end_categories data type.
+    # cats = [k[0] for k in end_categories]
+    item_list = Item.objects.filter(category__in=end_categories)
+    paginator = Paginator(item_list, 25)    # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+
+    return render(request, 'listing/item_by_category.html', {'results': items})
 
 
 def index_view(request):
@@ -71,6 +97,7 @@ def book_item(request, pk):
 
 
 def listing_item_view(request, slug):
+    # redirect the item page view based on its store type.
     item = get_object_or_404(Item, slug=slug)
     try:
         return book_item(request, item.book_store_item.pk)
@@ -80,6 +107,7 @@ def listing_item_view(request, slug):
 
 
 def add_to_cart_view(request):
+    # temp add_to_cart
     try:
         seller = request.GET['seller']
         item_slug = request.GET['item_slug']

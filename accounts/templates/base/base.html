@@ -17,13 +17,30 @@
 
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
+            
             <div class="navbar-header">
                 <a class="navbar-brand" href="{% url 'listing:index' %}"> Shop</a>
             </div>
+
             <ul class="nav navbar-nav">
                 <li><a href="{% url 'listing:index' %}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
             </ul>
 
+            <div class="navbar-form navbar-left">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Shop by Category
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        {% for id, value in categories_data.items %}
+                        <li>
+                            <a href="{% url 'listing:item_by_category' id %}">{{value.category_name}}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
 
             <form class="navbar-form navbar-left" role="search" action="{% url 'listing:search' %}" method="get">
                 <div class="form-group">

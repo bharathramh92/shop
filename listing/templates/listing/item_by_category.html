@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+
+{% block title %} Shop by Category {% endblock %}
+
+{% block body %}
+
+{% if results %}
+
+{% for result in results %}
+<a href="{% url  'listing:listing_item' result.slug %}"><p>{{ result.title }}</p></a>
+<br />
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if results.has_previous %}
+            <a href="?page={{ results.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ results.number }} of {{ results.paginator.num_pages }}.
+        </span>
+
+        {% if results.has_next %}
+            <a href="?page={{ results.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% else %}
+<div class="text-center">
+    <br/>
+    <p><strong>No products for this category</strong></p>
+</div>
+{% endif %}
+
+{% endblock %}

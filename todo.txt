@@ -26,13 +26,13 @@ autocomplete
     inventory form, for address
 
 add datetimepicker widget for inventory form
-
+add a temporary logo
+add div tag to search results. pretify it.
 url from seller's inventory page to items/book. Do this after slug url.
 change email in "Change Account Details" (Seller Dashboard)
 
 Immediate requirement
 
-book view
 shop by category
 cart
 **test cases
